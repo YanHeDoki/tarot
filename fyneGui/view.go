@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/go-toast/toast"
 	"tarot/TimeTick"
 	"tarot/mylog"
 	"tarot/tarot"
@@ -68,11 +69,28 @@ func start(f binding.Float) {
 		num := float64(since) / float64(TimeTick.GoHomeTime.Unix()-TimeTick.NowTime.Unix())
 		f.Set(num)
 		if num < 0 {
-			fmt.Println("可以打卡了")
+			Notify()
 			once = 0
 			break
 
 		}
 	}
 
+}
+
+func Notify() {
+	notification := toast.Notification{
+		AppID:   "Microsoft.Windows.Shell.RunDialog",
+		Title:   "下班",
+		Message: "到点了该打卡下班了",
+		Icon:    "C:\\path\\to\\your\\logo.png", // 文件必须存在
+		Actions: []toast.Action{
+			{"protocol", "打卡!", "https://www.dingtalk.com/"},
+			//{"protocol", "按钮2", "https://github.com/"},
+		},
+	}
+	notification.Push()
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
 }

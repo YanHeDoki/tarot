@@ -2,7 +2,10 @@ module tarot
 
 go 1.20
 
-require fyne.io/fyne/v2 v2.3.5
+require (
+	fyne.io/fyne/v2 v2.3.5
+	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4
+)
 
 require (
 	fyne.io/systray v1.10.1-0.20230602210930-b6a2d6ca2a7b // indirect
@@ -19,6 +22,7 @@ require (
 	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76 // indirect
 	github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780 // indirect

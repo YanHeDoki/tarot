@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"time"
 )
@@ -32,6 +31,9 @@ func CheckLog() (*CardLog, bool) {
 		fmt.Println("parse Log err:", err)
 	}
 	if parseLog.Before(parseNow) {
+		if parseNow.Day() == parseLog.Day() {
+			return cl, true
+		}
 		return nil, false
 	}
 	return cl, true
@@ -66,106 +68,106 @@ func getLastLine2() []byte {
 	for scanner.Scan() {
 		bytes = scanner.Bytes()
 	}
-	fmt.Println(string(bytes))
+	//fmt.Println(string(bytes))
 	return bytes
 }
 
-func getLastLine() []byte {
-	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	info, _ := file.Stat()
-	rd := bufio.NewReader(file)
-	if info.Size() > 0 {
-		index := int64(-1)
-		for {
-			index--
-			file.Seek(index, io.SeekEnd)
-			readByte, err := rd.ReadByte()
-			if readByte == '\n' {
-				file.Seek(0, io.SeekEnd)
-				break
-			}
-			if err != nil {
-				if err == io.EOF {
-					//file.Seek(0, io.SeekEnd)
-					break
-				}
-				fmt.Println(err)
-			}
-		}
-		//fmt.Println(index, info.Size())
-		line, _, err := rd.ReadLine()
-		if err != nil {
-			fmt.Println("get last line err:", err)
-		}
-		return line
-	}
-	return []byte{}
-}
-
-func getLastErr() {
-	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	info, _ := file.Stat()
-	if info.Size() > 0 {
-		index := int64(-1)
-		r := bufio.NewReader(file)
-		for {
-			index--
-			file.Seek(index, io.SeekEnd)
-			readByte, err := r.ReadByte()
-			if readByte == '\n' {
-				//file.Seek(0, io.SeekEnd)
-				break
-			}
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				fmt.Println(err)
-			}
-		}
-
-		line, _, _ := r.ReadLine()
-		fmt.Println(string(line))
-	}
-
-}
-
-func getLastOk() []byte {
-	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	info, _ := file.Stat()
-	if info.Size() > 0 {
-		index := int64(-1)
-		b := []byte{0}
-		for {
-			index--
-			file.Seek(index, io.SeekEnd)
-			_, err := file.Read(b)
-			if b[0] == '\n' {
-				break
-			}
-			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				fmt.Println(err)
-			}
-		}
-		rd := bufio.NewReader(file)
-		line, _, _ := rd.ReadLine()
-		return line
-	}
-	return []byte{}
-
-}
+//func getLastLine() []byte {
+//	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
+//	if err != nil {
+//		panic(err)
+//	}
+//	defer file.Close()
+//	info, _ := file.Stat()
+//	rd := bufio.NewReader(file)
+//	if info.Size() > 0 {
+//		index := int64(-1)
+//		for {
+//			index--
+//			file.Seek(index, io.SeekEnd)
+//			readByte, err := rd.ReadByte()
+//			if readByte == '\n' {
+//				file.Seek(0, io.SeekEnd)
+//				break
+//			}
+//			if err != nil {
+//				if err == io.EOF {
+//					//file.Seek(0, io.SeekEnd)
+//					break
+//				}
+//				fmt.Println(err)
+//			}
+//		}
+//		//fmt.Println(index, info.Size())
+//		line, _, err := rd.ReadLine()
+//		if err != nil {
+//			fmt.Println("get last line err:", err)
+//		}
+//		return line
+//	}
+//	return []byte{}
+//}
+//
+//func getLastErr() {
+//	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
+//	if err != nil {
+//		panic(err)
+//	}
+//	defer file.Close()
+//	info, _ := file.Stat()
+//	if info.Size() > 0 {
+//		index := int64(-1)
+//		r := bufio.NewReader(file)
+//		for {
+//			index--
+//			file.Seek(index, io.SeekEnd)
+//			readByte, err := r.ReadByte()
+//			if readByte == '\n' {
+//				//file.Seek(0, io.SeekEnd)
+//				break
+//			}
+//			if err != nil {
+//				if err == io.EOF {
+//					break
+//				}
+//				fmt.Println(err)
+//			}
+//		}
+//
+//		line, _, _ := r.ReadLine()
+//		fmt.Println(string(line))
+//	}
+//
+//}
+//
+//func getLastOk() []byte {
+//	file, err := os.OpenFile("checkLog.txt", os.O_RDONLY, 0600)
+//	if err != nil {
+//		panic(err)
+//	}
+//	defer file.Close()
+//	info, _ := file.Stat()
+//	if info.Size() > 0 {
+//		index := int64(-1)
+//		b := []byte{0}
+//		for {
+//			index--
+//			file.Seek(index, io.SeekEnd)
+//			_, err := file.Read(b)
+//			if b[0] == '\n' {
+//				break
+//			}
+//			if err != nil {
+//				if err == io.EOF {
+//					break
+//				}
+//				fmt.Println(err)
+//			}
+//		}
+//		rd := bufio.NewReader(file)
+//		line, _, _ := rd.ReadLine()
+//		return line
+//	}
+//	return []byte{}
+//
+//}
