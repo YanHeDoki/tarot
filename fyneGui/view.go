@@ -63,12 +63,12 @@ func GuiStart() {
 }
 
 func start(f binding.Float) {
-	for range time.Tick(1 * time.Second) {
+	for range time.Tick(1 * time.Minute) {
 		now := time.Now().Unix()
 		since := TimeTick.GoHomeTime.Unix() - now
 		num := float64(since) / float64(TimeTick.GoHomeTime.Unix()-TimeTick.NowTime.Unix())
 		f.Set(num)
-		if num < 0 {
+		if num < 0.00 {
 			Notify()
 			once = 0
 			break
