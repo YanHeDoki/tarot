@@ -5,11 +5,13 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/go-toast/toast"
+	"strconv"
 	"tarot/TimeTick"
 	"tarot/mylog"
 	"tarot/tarot"
@@ -42,6 +44,7 @@ func GuiStart() {
 		if err != nil {
 			fmt.Println(err)
 		}
+
 		//canvas.NewImageFromResource(fyne.NewStaticResource())
 		img := canvas.NewImageFromReader(file, "tarot1.jpg")
 		img.FillMode = canvas.ImageFillOriginal
@@ -49,23 +52,30 @@ func GuiStart() {
 		w2.Show()
 	})
 
+	str := binding.NewString()
+	str.Set("\nRemaining Time:\n540Min")
+	l := widget.NewLabelWithData(str)
+	l.Alignment = fyne.TextAlignCenter
 	button2 := widget.NewButton("start", func() {
 		if once == 0 {
 			TimeTick.TimeStart()
 			//开始计时
-			go start(f)
+			go start(f, str)
 			once = 1
 		}
 	})
 	w.SetMaster()
-	w.SetContent(fyne.NewContainerWithLayout(layout.NewGridLayoutWithRows(3), button2, progress, button))
+	//w.SetContent(fyne.NewContainerWithLayout(layout.NewGridLayoutWithRows(3), button2, progress, button))
+	w.SetContent(container.New(layout.NewGridLayout(2), button, button2, l, progress))
 	w.ShowAndRun()
 }
 
-func start(f binding.Float) {
+func start(f binding.Float, s binding.String) {
 	for range time.Tick(1 * time.Minute) {
-		now := time.Now().Unix()
-		since := TimeTick.GoHomeTime.Unix() - now
+		now := time.Now()
+		since := TimeTick.GoHomeTime.Unix() - now.Unix()
+		sincemin := TimeTick.GoHomeTime.Sub(now).Minutes()
+		s.Set("\nRemaining Time:\n" + strconv.Itoa(int(sincemin)) + "Min")
 		num := float64(since) / float64(TimeTick.GoHomeTime.Unix()-TimeTick.NowTime.Unix())
 		f.Set(num)
 		if num < 0.00 {

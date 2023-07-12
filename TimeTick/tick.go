@@ -1,7 +1,6 @@
 package TimeTick
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -19,5 +18,5 @@ func TimeStart() {
 	//NowTime, _ = time.Parse(time.DateTime, format)
 	//8小时后下班
 	GoHomeTime = NowTime.Add(9 * time.Hour)
-	fmt.Println(NowTime, GoHomeTime)
+	//fmt.Println(NowTime, GoHomeTime)
 }
